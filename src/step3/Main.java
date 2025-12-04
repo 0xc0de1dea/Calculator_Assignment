@@ -33,6 +33,26 @@ enum OperatorType {
     }
 }
 
+class NumberBox {
+    private Number val;
+
+    public NumberBox(Number val) {
+        this.val = val;
+    }
+
+    public Number getValue() {
+        return val;
+    }
+
+    public double toDouble() {
+        return val.doubleValue();
+    }
+
+    public int toInt() {
+        return val.intValue();
+    }
+}
+
 class ArithmeticCalculator<T extends Number> {
     private Deque<String> list;
 
@@ -66,7 +86,7 @@ class ArithmeticCalculator<T extends Number> {
         }
 
         double res = operType.calculate(x, y);
-        
+
         return res;
     }
 
@@ -82,9 +102,18 @@ class ArithmeticCalculator<T extends Number> {
 }
 
 public class Main {
+    public static boolean isInt(String s) {
+        return s.matches("^-?\\d+$");
+    }
+
+    public static boolean isDouble(String s) {
+        return s.matches("^-?\\d+\\.\\d+$");
+    }
+
     public static void main(String[] args) {
         Scanner in =  new Scanner(System.in);
-        ArithmeticCalculator calculator = new ArithmeticCalculator();
+        ArithmeticCalculator<Integer> calculatorInt = new ArithmeticCalculator<>();
+        ArithmeticCalculator<Double> calculatorDouble = new ArithmeticCalculator<>();
 
         while (true){
             System.out.println("============= 계산기 프로그램입니다. =============");
@@ -107,17 +136,19 @@ public class Main {
             }
 
             if (c == 1) {
-                String firstNum = "";
+                NumberBox firstNum = null;
 
                 while (true){
                     System.out.println("첫 번째 숫자를 입력해 주세요.");
 
                     try {
-                        firstNum = in.next();
-
-
-
+                        String tmp = in.next();
                         in.nextLine();
+
+
+
+                        firstNum = new NumberBox();
+
                         break;
                     } catch (InputMismatchException e) {
                         in.nextLine();
