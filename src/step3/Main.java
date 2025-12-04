@@ -8,18 +8,18 @@ interface Operator {
 }
 
 enum OperatorType {
-    ADD("+", (a, b) -> a + b),
-    SUBTRACT("-", (a, b) -> a - b),
-    MULTIPLY("*", (a, b) -> a * b),
-    DIVIDE("/", (a, b) -> {
+    ADD('+', (a, b) -> a + b),
+    SUBTRACT('-', (a, b) -> a - b),
+    MULTIPLY('*', (a, b) -> a * b),
+    DIVIDE('/', (a, b) -> {
         if (b == 0) throw new ArithmeticException();
         return a / b;
     });
 
-    private final String symbol;
+    private final char symbol;
     private final Operator operation;
 
-    OperatorType(String symbol, Operator operation) {
+    OperatorType(char symbol, Operator operation) {
         this.symbol = symbol;
         this.operation = operation;
     }
@@ -28,7 +28,7 @@ enum OperatorType {
         return operation.calculate(a, b);
     }
 
-    public String getSymbol() {
+    public char getSymbol() {
         return symbol;
     }
 }
@@ -53,7 +53,21 @@ class ArithmeticCalculator<T extends Number> {
     }
 
     public double calculate(T a, char oper, T b){
+        double x = a.doubleValue();
+        double y = b.doubleValue();
+
+        OperatorType operType = null;
+
+        for (OperatorType op : OperatorType.values()){
+            if (op.getSymbol() == oper){
+                operType = op;
+                break;
+            }
+        }
+
+        double res = operType.calculate(x, y);
         
+        return res;
     }
 
     public String toString(Deque<String> list){
