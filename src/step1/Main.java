@@ -63,7 +63,30 @@ public class Main {
                 }
             }
 
-            
+            int result = 0;
+            boolean divideZero = false;
+
+            if (oper == '+'){
+                result = firstNum + secondNum;
+            } else if (oper == '-'){
+                result = firstNum - secondNum;
+            } else if (oper == '*'){
+                result = firstNum * secondNum;
+            } else  if (oper == '/'){
+                try {
+                    result = firstNum / secondNum;
+                } catch (ArithmeticException e) {
+                    System.out.println("0으로 나눌 수 없습니다.");
+
+                    divideZero = true;
+                }
+            }
+
+            if (!divideZero){
+                System.out.println("계산결과 : " + firstNum + " " + oper + " " + secondNum + " = " + result);
+            } else {
+                System.out.println("계산결과 : " + "0으로 나눌 수 없습니다.");
+            }
 
             System.out.println("더 계산하시겠습니까? (exit 입력시 종료 / 그 외의 아무거나 입력시 계속)");
 
