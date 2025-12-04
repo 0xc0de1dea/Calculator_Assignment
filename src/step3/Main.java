@@ -118,9 +118,8 @@ public class Main {
         while (true){
             System.out.println("============= 계산기 프로그램입니다. =============");
             System.out.println("1. 계산하기");
-            System.out.println("2. 계산 히스토리 보기");
-            System.out.println("3. 최근 히스토리 삭제");
-            System.out.println("4. 계산기 종료");
+            System.out.println("2. 임의의 값보다 큰 계산식을 히스토리에서 찾기");
+            System.out.println("3. 계산기 종료");
 
             int c = 0;
 
@@ -145,9 +144,11 @@ public class Main {
                         String tmp = in.next();
                         in.nextLine();
 
-
-
-                        firstNum = new NumberBox();
+                        if (isInt(tmp)){
+                            firstNum = new NumberBox(Integer.parseInt(tmp));
+                        } else {
+                            firstNum = new NumberBox(Double.parseDouble(tmp));
+                        }
 
                         break;
                     } catch (InputMismatchException e) {
@@ -158,19 +159,24 @@ public class Main {
 
                 char oper = ' ';
 
-                HashSet<Character> hs = new HashSet<>();
-                hs.add('+');
-                hs.add('-');
-                hs.add('*');
-                hs.add('/');
-
                 while (true){
                     System.out.println("연산을 할 연산자를 입력해주세요. (+ - * /)");
 
                     String input = in.next();
                     in.nextLine();
 
-                    if (input.length() == 1 && hs.contains(input.charAt(0))) {
+                    boolean flag = false;
+
+                    if (input.length() == 1){
+                        for (OperatorType op : OperatorType.values()){
+                            if (op.getSymbol() == input.charAt(0)){
+                                flag = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (flag) {
                         oper = input.charAt(0);
                         break;
                     } else {
@@ -178,14 +184,21 @@ public class Main {
                     }
                 }
 
-                int secondNum = 0;
+                NumberBox secondNum = null;
 
                 while (true){
-                    System.out.println("두 번째 숫자(양의 정수)를 입력해 주세요.");
+                    System.out.println("두 번째 숫자를 입력해 주세요.");
 
                     try {
-                        secondNum = in.nextInt();
+                        String tmp = in.next();
                         in.nextLine();
+
+                        if (isInt(tmp)){
+                            secondNum = new NumberBox(Integer.parseInt(tmp));
+                        } else {
+                            secondNum = new NumberBox(Double.parseDouble(tmp));
+                        }
+
                         break;
                     } catch (InputMismatchException e) {
                         in.nextLine();
@@ -193,11 +206,16 @@ public class Main {
                     }
                 }
 
-                int res = 0;
+                double res = 0;
                 boolean divideZero = false;
 
                 try {
-                    res = calculator.calculate(firstNum, oper, secondNum);
+                    if (isInt(firstNum.getValue().toString()) && isInt(secondNum.getValue().toString())){
+                        res = calculatorInt.calculate(firstNum.toInt(), oper, secondNum.toInt());
+                        System.out.println("int");
+                    } else {
+                        res = calculatorDouble.calculate(firstNum.toDouble(), oper, secondNum.toDouble());
+                    }
                 } catch (ArithmeticException e) {
                     divideZero = true;
                 }
@@ -205,7 +223,7 @@ public class Main {
                 String history = "";
 
                 if (!divideZero){
-                    history = "계산결과 : " + firstNum + " " + oper + " " + secondNum + " = " + res;
+                    history = "계산결과 : " + firstNum.getValue().doubleValue() + " " + oper + " " + secondNum.getValue().doubleValue() + " = " + res;
                     System.out.println(history);
                     System.out.println();
                 } else {
@@ -214,14 +232,12 @@ public class Main {
                     System.out.println();
                 }
 
-                calculator.setList(history);
+                calculatorDouble.setList(history);
             } else if (c == 2){
                 System.out.println();
-                System.out.print(calculator.getList());
+                System.out.print(calculatorDouble.getList());
                 System.out.println();
             } else if (c == 3){
-                calculator.removeList();
-            } else if (c == 4){
                 System.out.println("============= 계산기를 종료합니다. =============");
                 break;
             } else {
