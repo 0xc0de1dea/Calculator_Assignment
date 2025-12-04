@@ -64,6 +64,20 @@ class ArithmeticCalculator<T extends Number> {
         return toString(this.list);
     }
 
+    public String getConditionList(double trg){
+        return this.list.stream().filter(s -> {
+            String[] split = s.split("= ");
+
+            double res = Double.parseDouble(split[1].trim());
+
+            return res > trg;
+        }).collect(
+            StringBuilder::new,
+            (sb, s) -> sb.append(s).append('\n'),
+            StringBuilder::append
+        ).toString();
+    }
+
     public void setList(String result){
         this.list.addLast(result);
     }
@@ -212,7 +226,6 @@ public class Main {
                 try {
                     if (isInt(firstNum.getValue().toString()) && isInt(secondNum.getValue().toString())){
                         res = calculatorInt.calculate(firstNum.toInt(), oper, secondNum.toInt());
-                        System.out.println("int");
                     } else {
                         res = calculatorDouble.calculate(firstNum.toDouble(), oper, secondNum.toDouble());
                     }
@@ -234,8 +247,21 @@ public class Main {
 
                 calculatorDouble.setList(history);
             } else if (c == 2){
-                System.out.println();
-                System.out.print(calculatorDouble.getList());
+                double trg = 0;
+                System.out.println("임의의 값을 선택하세요.");
+
+                while (true){
+                    try {
+                        trg = in.nextDouble();
+                        in.nextLine();
+                        break;
+                    } catch (InputMismatchException e) {
+                        in.nextLine();
+                        System.out.println("올바른 값을 입력하세요.");
+                    }
+                }
+
+                System.out.print(calculatorDouble.getConditionList(trg));
                 System.out.println();
             } else if (c == 3){
                 System.out.println("============= 계산기를 종료합니다. =============");
