@@ -81,6 +81,8 @@ class ArithmeticCalculator<T extends Number> {
         return this.list.stream().filter(s -> {
             String[] split = s.split("= ");
 
+            if (split.length < 2) return false;
+
             double res = Double.parseDouble(split[1].trim());
 
             return res > trg;
