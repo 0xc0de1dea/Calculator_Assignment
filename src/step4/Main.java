@@ -195,8 +195,7 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner in =  new Scanner(System.in);
-        ArithmeticCalculator<Integer> calculatorInt = new ArithmeticCalculator<>();
-        ArithmeticCalculator<Double> calculatorDouble = new ArithmeticCalculator<>();
+        ArithmeticCalculator<Number> calculator = new ArithmeticCalculator<>();
 
         while (true) {
             System.out.println("============= 계산기 프로그램입니다. =============");
@@ -294,11 +293,7 @@ public class Main {
                 boolean divideZero = false;
 
                 try {
-                    if (isInt(firstNum.getValue().toString()) && isInt(secondNum.getValue().toString())) {
-                        res = calculatorInt.calculate(firstNum.toInt(), oper, secondNum.toInt());
-                    } else {
-                        res = calculatorDouble.calculate(firstNum.toDouble(), oper, secondNum.toDouble());
-                    }
+                    res = calculator.calculate(firstNum.getValue(), oper, secondNum.getValue());
                 } catch (ArithmeticException e) {
                     divideZero = true;
                 }
@@ -306,7 +301,7 @@ public class Main {
                 String history = "";
 
                 if (!divideZero) {
-                    history = "계산결과 : " + firstNum.getValue().doubleValue() + " " + oper + " " + secondNum.getValue().doubleValue() + " = " + res;
+                    history = "계산결과 : " + firstNum.toDouble() + " " + oper + " " + secondNum.toDouble() + " = " + res;
                     System.out.println(history);
                     System.out.println();
                 } else {
@@ -315,14 +310,14 @@ public class Main {
                     System.out.println();
                 }
 
-                calculatorDouble.setList(history);
+                calculator.setList(history);
             } else if (c == 2){
                 while (true){
-                    System.out.println("계산식을 입력해주세요. ex) 2 + 3 * 4 + ( 5 - 6 ) / 7");
+                    System.out.println("계산식을 입력해주세요. ex) ");
 
                     String infix = in.nextLine();
 
-                    HashMap<String, Integer> priority = calculatorDouble.getPriority();
+                    HashMap<String, Integer> priority = calculator.getPriority();
 
                     boolean flag = true;
 
@@ -338,16 +333,16 @@ public class Main {
                     if (!flag){
                         System.out.println("올바른 계산식을 입력해주세요.");
                     } else {
-                        String postfix = calculatorDouble.convertInfixToPostfix(infix);
+                        String postfix = calculator.convertInfixToPostfix(infix);
                         double res = 0;
 
                         try {
-                            res = calculatorDouble.calculatePostfix(postfix);
+                            res = calculator.calculatePostfix(postfix);
                             System.out.println("계산결과 : " + infix + " = " + res);
-                            calculatorDouble.setList("계산결과 : " + infix + " = " + res);
+                            calculator.setList("계산결과 : " + infix + " = " + res);
                         } catch (ArithmeticException e) {
                             System.out.println("계산결과 : 0으로 나눌 수 없습니다.");
-                            calculatorDouble.setList("계산결과 : 0으로 나눌 수 없습니다.");
+                            calculator.setList("계산결과 : 0으로 나눌 수 없습니다.");
                         }
 
                         break;
@@ -368,7 +363,7 @@ public class Main {
                     }
                 }
 
-                System.out.print(calculatorDouble.getConditionList(trg));
+                System.out.print(calculator.getConditionList(trg));
                 System.out.println();
             } else if (c == 4){
                 System.out.println("============= 계산기를 종료합니다. =============");
